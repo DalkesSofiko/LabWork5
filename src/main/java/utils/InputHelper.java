@@ -1,3 +1,7 @@
+package utils;
+
+import Main.InputCancelledException;
+
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -14,6 +18,12 @@ public class InputHelper {
      * @return введённая строка или null
      */
     public static String readString(Scanner sc, String prompt, boolean nullable) {
+        String Input1 = sc.nextLine().trim();
+
+        if (Input1.equalsIgnoreCase("cancel") || Input1.equalsIgnoreCase("отмена")) {
+            throw new InputCancelledException();
+        }
+
         while (true) {
             System.out.print(prompt);
             String input = sc.nextLine().trim();
@@ -29,6 +39,11 @@ public class InputHelper {
     public static long readLong(Scanner sc, String prompt, long minExclusive, Long maxInclusive) {
         while (true) {
             System.out.print(prompt);
+            String Input1 = sc.nextLine().trim();
+
+            if (Input1.equalsIgnoreCase("cancel") || Input1.equalsIgnoreCase("отмена")) {
+                throw new InputCancelledException();
+            }
             try {
                 long val = Long.parseLong(sc.nextLine().trim());
                 if (val <= minExclusive) { System.out.println("Значение должно быть > " + minExclusive); continue; }
@@ -42,6 +57,12 @@ public class InputHelper {
      * Читает double.
      */
     public static double readDouble(Scanner sc, String prompt) {
+        String Input1 = sc.nextLine().trim();
+
+        if (Input1.equalsIgnoreCase("cancel") || Input1.equalsIgnoreCase("отмена")) {
+            throw new InputCancelledException();
+        }
+
         while (true) {
             System.out.print(prompt);
             try { return Double.parseDouble(sc.nextLine().trim()); }
