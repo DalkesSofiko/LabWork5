@@ -17,8 +17,8 @@ public class InputReader {
      * @return введенную строку или null
      */
     public static String readString(String prompt, boolean nullable, boolean notEmpty){
-        while (true){ //while используется чтобы цикл был бесконечным до того момента, пока пользователь не введ то, что от него требуется
-            System.out.println(prompt); //выводим подсказку с тем что нужно ввести
+        while (true){
+            System.out.println(prompt);
             String input = scanner.nextLine();
 
             if(nullable && input.isEmpty()){

@@ -18,15 +18,14 @@ public class InputHelper {
      * @return введённая строка или null
      */
     public static String readString(Scanner sc, String prompt, boolean nullable) {
-        String Input1 = sc.nextLine().trim();
-
-        if (Input1.equalsIgnoreCase("cancel") || Input1.equalsIgnoreCase("отмена")) {
-            throw new InputCancelledException();
-        }
-
         while (true) {
             System.out.print(prompt);
             String input = sc.nextLine().trim();
+
+            if (input.equalsIgnoreCase("cancel") || input.equalsIgnoreCase("отмена")) {
+                throw new InputCancelledException();
+            }
+
             if (input.isEmpty() && nullable) return null;
             if (!input.isEmpty()) return input;
             System.out.println("Поле не может быть пустым.");
@@ -39,17 +38,32 @@ public class InputHelper {
     public static long readLong(Scanner sc, String prompt, long minExclusive, Long maxInclusive) {
         while (true) {
             System.out.print(prompt);
-            String Input1 = sc.nextLine().trim();
+            String input = sc.nextLine().trim();
 
-            if (Input1.equalsIgnoreCase("cancel") || Input1.equalsIgnoreCase("отмена")) {
+            if (input.equalsIgnoreCase("cancel") || input.equalsIgnoreCase("отмена")) {
                 throw new InputCancelledException();
             }
+
+            if (input.isEmpty()) {
+                System.out.println("Ввод не может быть пустым.");
+                continue;
+            }
+
             try {
-                long val = Long.parseLong(sc.nextLine().trim());
-                if (val <= minExclusive) { System.out.println("Значение должно быть > " + minExclusive); continue; }
-                if (maxInclusive != null && val > maxInclusive) { System.out.println("Значение должно быть <= " + maxInclusive); continue; }
+                long val = Long.parseLong(input);
+
+                if (val <= minExclusive) {
+                    System.out.println("Значение должно быть > " + minExclusive);
+                    continue;
+                }
+                if (maxInclusive != null && val > maxInclusive) {
+                    System.out.println("Значение должно быть <= " + maxInclusive);
+                    continue;
+                }
                 return val;
-            } catch (NumberFormatException e) { System.out.println("Ожидается целое число."); }
+            } catch (NumberFormatException e) {
+                System.out.println("Ожидается целое число.");
+            }
         }
     }
 
@@ -57,16 +71,19 @@ public class InputHelper {
      * Читает double.
      */
     public static double readDouble(Scanner sc, String prompt) {
-        String Input1 = sc.nextLine().trim();
-
-        if (Input1.equalsIgnoreCase("cancel") || Input1.equalsIgnoreCase("отмена")) {
-            throw new InputCancelledException();
-        }
-
         while (true) {
             System.out.print(prompt);
-            try { return Double.parseDouble(sc.nextLine().trim()); }
-            catch (NumberFormatException e) { System.out.println("Ожидается число."); }
+            String input = sc.nextLine().trim();
+
+            if (input.equalsIgnoreCase("cancel") || input.equalsIgnoreCase("отмена")) {
+                throw new InputCancelledException();
+            }
+
+            try {
+                return Double.parseDouble(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Ожидается число.");
+            }
         }
     }
 
@@ -78,9 +95,17 @@ public class InputHelper {
         while (true) {
             System.out.print(prompt);
             String input = sc.nextLine().trim();
+
+            if (input.equalsIgnoreCase("cancel") || input.equalsIgnoreCase("отмена")) {
+                throw new InputCancelledException();
+            }
+
             if (input.isEmpty()) return null;
-            try { return Enum.valueOf(cls, input.toUpperCase()); }
-            catch (IllegalArgumentException e) { System.out.println("Некорректное значение enum."); }
+            try {
+                return Enum.valueOf(cls, input.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Некорректное значение enum.");
+            }
         }
     }
 }
