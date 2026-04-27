@@ -3,18 +3,34 @@ package commands;
 import java.util.HashMap;
 import java.util.Date;
 import models.Organization;
+import java.util.Deque;
 
 /**
- * Команда info — выводит информацию о коллекции.
+ * Команда info.
+ * Выводит в стандартный поток вывода информацию о коллекции:
+ * тип, дату инициализации (текущую) и количество элементов.
  */
 public class info extends AbstractCommand {
-    public info(){
+
+    /**
+     * Конструктор команды.
+     * Инициализирует имя команды и её описание.
+     */
+    public info() {
         super("info", "вывод информации о коллекции");
     }
 
+    /**
+     * Выполняет команду: проверяет наличие элементов в коллекции и выводит
+     * её метаданные (тип, дата, размер).
+     *
+     * @param argument аргументы команды (не используются)
+     * @param collection коллекция организаций
+     * @param history история выполненных команд
+     */
     @Override
-    public void execute( String argument, HashMap<Integer, Organization> collection, java.util.Deque<String> history){
-        if (!checkCollection(collection)){
+    public void execute(String argument, HashMap<Integer, Organization> collection, Deque<String> history) {
+        if (!checkCollection(collection)) {
             return;
         }
 

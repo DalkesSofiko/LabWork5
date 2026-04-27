@@ -9,23 +9,45 @@ import utils.XMLHandler;
 
 /**
  * Главное приложение. Содержит интерактивный цикл и маршрутизатор команд.
+ * Управляет коллекцией организаций и историей команд.
  */
 public class Main {
+
+    /** Коллекция объектов Organization, управляемая программой. */
     public static HashMap<Integer, Organization> collection = new HashMap<>();
+
+    /** История последних 7 выполненных команд. */
     public static Deque<String> history = new ArrayDeque<>();
+
+    /** Сканер для чтения ввода пользователя из консоли. */
     public static Scanner scanner = new Scanner(System.in);
+
+    /** Путь к файлу данных, получаемый из переменной окружения ORGANIZATIONS_FILE. */
     public static String filePath = System.getenv("ORGANIZATIONS_FILE");
+
+    /** Счётчик для генерации уникальных ID новых объектов. */
     public static int nextId = 1;
+
+    /** Флаг, определяющий, работает ли программа в данный момент. */
     public static boolean running = true;
 
+    /**
+     * Добавляет имя команды в историю выполнения.
+     * Если история превышает 7 элементов, самый старый удаляется.
+     *
+     * @param commandName имя выполненной команды
+     */
     public static void addToHistory(String commandName) {
         if (history.size() >= 7) {
             history.pollFirst();
         }
         history.addLast(commandName);
     }
+
     /**
-     * Маршрутизатор команд: вызывает execute(arg, collection, history)
+     * Маршрутизатор команд: вызывает execute(arg, collection, history) для соответствующей команды.
+     *
+     * @param input строка ввода пользователя, содержащая имя команды и аргументы
      */
     public static void processCommand(String input) {
         String[] parts = input.trim().split("\\s+", 2);
@@ -54,6 +76,12 @@ public class Main {
         }
     }
 
+    /**
+     * Точка входа в приложение.
+     * Инициализирует коллекцию из файла и запускает интерактивный режим.
+     *
+     * @param args аргументы командной строки (не используются)
+     */
     public static void main(String[] args) {
 
         if (filePath == null) {

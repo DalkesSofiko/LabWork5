@@ -2,15 +2,32 @@ package commands;
 
 import java.util.HashMap;
 import models.Organization;
+import java.util.Deque;
 
-public class help extends AbstractCommand{
+/**
+ * Команда help.
+ * Выводит справку по всем доступным командам приложения в стандартный поток вывода.
+ */
+public class help extends AbstractCommand {
 
-    public help(){
+    /**
+     * Конструктор команды.
+     * Инициализирует имя команды и её описание.
+     */
+    public help() {
         super("help", "Вывод справки по доступным командам");
     }
 
+    /**
+     * Выполняет команду: выводит отформатированный список всех поддерживаемых команд
+     * с кратким описанием их назначения.
+     *
+     * @param argument аргументы команды (не используются)
+     * @param collection коллекция организаций
+     * @param history история выполненных команд
+     */
     @Override
-    public void execute(String argument, HashMap<Integer, Organization> collection, java.util.Deque<String> history) {
+    public void execute(String argument, HashMap<Integer, Organization> collection, Deque<String> history) {
         System.out.println("""
                  --СПРАВКА ПО КОМАНДАМ--
                  help                              — показать эту справку  
@@ -36,6 +53,4 @@ public class help extends AbstractCommand{
 
         addToHistory(getName(), history);
     }
-
-
 }

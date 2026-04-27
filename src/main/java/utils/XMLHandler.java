@@ -8,16 +8,25 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-
 import org.w3c.dom.*;
 
+/**
+ * Утилитный класс для работы с XML-файлами.
+ * Обеспечивает загрузку коллекции организаций из файла и её сохранение в формате XML.
+ */
 public class XMLHandler {
 
-    public static HashMap<Integer, Organization> loadFromFile(String filename){
+    /**
+     * Загружает коллекцию организаций из указанного XML-файла.
+     * Если файл не найден, возвращает пустую коллекцию.
+     *
+     * @param filename путь к файлу с данными
+     * @return HashMap с загруженными организациями, где ключ — ID организации
+     */
+    public static HashMap<Integer, Organization> loadFromFile(String filename) {
         HashMap<Integer, Organization> collection = new HashMap<>();
 
-        try(BufferedInputStream bis = new BufferedInputStream(new FileInputStream(filename))) {
+        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(filename))) {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(bis);
@@ -33,8 +42,8 @@ public class XMLHandler {
                 }
             }
 
-            System.out.println("Загружено " + collection.size() + "организаций");
-        } catch (FileNotFoundException e){
+            System.out.println("Загружено " + collection.size() + " организаций");
+        } catch (FileNotFoundException e) {
             System.out.println("Файл не найден, создаем новую пустую коллекцию");
         } catch (Exception e) {
             System.err.println("Ошибка при загрузке: " + e.getMessage());
@@ -43,8 +52,14 @@ public class XMLHandler {
         return collection;
     }
 
-    public static void save(String filename, HashMap<Integer, Organization> collection){
-        try{
+    /**
+     * Сохраняет коллекцию организаций в указанный XML-файл.
+     *
+     * @param filename путь к файлу для сохранения
+     * @param collection коллекция организаций для сохранения
+     */
+    public static void save(String filename, HashMap<Integer, Organization> collection) {
+        try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.newDocument();
@@ -67,15 +82,20 @@ public class XMLHandler {
             }
 
             System.out.println("Коллекция сохранена в файле " + filename);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Ошибка записи в файле: " + e.getMessage());
-        } catch (Exception e){
+        } catch (Exception e) {
             System.err.println("Ошибка при сохранении: " + e.getMessage());
         }
     }
 
-
-    private static Organization parseOrganization(Element element){
+    /**
+     * Парсит элемент XML в объект Organization.
+     *
+     * @param element XML-элемент, содержащий данные организации
+     * @return объект Organization или null, если данные некорректны
+     */
+    private static Organization parseOrganization(Element element) {
         try {
             Organization org = new Organization();
 
@@ -111,16 +131,22 @@ public class XMLHandler {
             org.setPostalAddress(address);
 
             return org;
-        } catch (Exception e){
-            System.err.println("Ошибка при разборе организации:" + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Ошибка при разборе организации: " + e.getMessage());
             return null;
         }
     }
 
-    private static Coordinates parseCoordinates(Element coorfParent){
+    /**
+     * Парсит вложенный элемент coordinates в объект Coordinates.
+     *
+     * @param coordParent родительский XML-элемент организации
+     * @return объект Coordinates или null при ошибке
+     */
+    private static Coordinates parseCoordinates(Element coordParent) {
         try {
-            Element coordElement = (Element) coorfParent.getElementsByTagName("coordinates").item(0);
-            if (coordElement == null){
+            Element coordElement = (Element) coordParent.getElementsByTagName("coordinates").item(0);
+            if (coordElement == null) {
                 return null;
             }
 
@@ -128,12 +154,18 @@ public class XMLHandler {
             double y = Double.parseDouble(getElementText(coordElement, "y"));
 
             return new Coordinates(x, y);
-        } catch (Exception e){
-            System.err.println("Ошибка при разборе коорлинат: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Ошибка при разборе координат: " + e.getMessage());
             return null;
         }
     }
 
+    /**
+     * Парсит вложенный элемент postalAddress в объект Address.
+     *
+     * @param parent родительский XML-элемент организации
+     * @return объект Address или null при ошибке
+     */
     private static Address parseAddress(Element parent) {
         try {
             Element addrElement = (Element) parent.getElementsByTagName("postalAddress").item(0);
@@ -147,7 +179,13 @@ public class XMLHandler {
         }
     }
 
-
+    /**
+     * Создает XML-элемент для объекта Organization.
+     *
+     * @param doc документ XML
+     * @param org объект организации
+     * @return созданный XML-элемент organization
+     */
     private static Element createOrganizationElement(Document doc, Organization org) {
         Element orgElement = doc.createElement("organization");
 
@@ -174,12 +212,27 @@ public class XMLHandler {
         return orgElement;
     }
 
+    /**
+     * Добавляет дочерний текстовый элемент в родительский XML-элемент.
+     *
+     * @param doc документ XML
+     * @param parent родительский элемент
+     * @param tagName имя нового тега
+     * @param text текстовое содержимое элемента
+     */
     private static void addElement(Document doc, Element parent, String tagName, String text) {
         Element element = doc.createElement(tagName);
         element.setTextContent(text != null ? text : "");
         parent.appendChild(element);
     }
 
+    /**
+     * Извлекает текстовое содержимое первого дочернего элемента с заданным именем.
+     *
+     * @param parent родительский элемент
+     * @param tagName имя искомого тега
+     * @return текст элемента или null, если элемент не найден
+     */
     private static String getElementText(Element parent, String tagName) {
         NodeList list = parent.getElementsByTagName(tagName);
         if (list.getLength() > 0) {
@@ -188,5 +241,4 @@ public class XMLHandler {
         }
         return null;
     }
-
 }

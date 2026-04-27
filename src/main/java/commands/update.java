@@ -16,7 +16,7 @@ public class update extends AbstractCommand {
     public void execute(String argument, HashMap<Integer, Organization> collection, Deque<String> history) {
         if (!checkCollection(collection)) return;
         Integer id = readId(Main.scanner, argument, "id для обновления: ");
-        if (!collection.containsKey(id)) { System.out.println("❌ Не найден."); return; }
+        if (!collection.containsKey(id)) { System.out.println("Не найден."); return; }
         Organization o = new Organization();
         o.setName(InputHelper.readString(Main.scanner, "name: ", false));
         Coordinates c = new Coordinates(); c.setX(InputHelper.readLong(Main.scanner, "coordinates.x (> -410): ", -410, null)); c.setY(InputHelper.readDouble(Main.scanner, "coordinates.y: "));
