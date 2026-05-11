@@ -1,5 +1,7 @@
 package commands;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Deque;
 import java.util.HashMap;
 import models.*;
@@ -32,9 +34,19 @@ public class save extends AbstractCommand {
     public void execute(String argument, HashMap<Integer, Organization> collection, Deque<String> history) {
         if (!checkCollection(collection)) return;
 
-        XMLHandler.save(Main.filePath, collection);
-        System.out.println("Сохранена.");
+        // Проверяем право на запись в файл перед сохранением
+        if (!Files.isWritable(Paths.get(Main.filePath))) {
+            System.out.println("Ошибка: Нет прав на запись в файл " + Main.filePath);
+            System.out.println("Исправьте права: chmod u+w " + Main.filePath);
+            return;
+        }
 
-        addToHistory(getName(), history);
+        try {
+            XMLHandler.save(Main.filePath, collection);
+            System.out.println("Коллекция успешно сохранена в " + Main.filePath);
+            addToHistory(getName(), history);
+        } catch (Exception e) {
+            System.out.println("Ошибка сохранения: " + e.getMessage());
+        }
     }
 }

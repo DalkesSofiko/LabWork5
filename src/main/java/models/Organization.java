@@ -5,11 +5,10 @@ import java.util.Date;
 
 /**
  * Класс, представляющий организацию.
- * Реализует интерфейс Comparable для сортировки по ID и Serializable для сохранения в файл.
  * <p>
  * Поля id и creationDate генерируются автоматически.
  */
-public class Organization implements Comparable<Organization>, Serializable {
+public class Organization implements Comparable<Organization> {
 
     /**
      * Уникальный идентификатор организации.

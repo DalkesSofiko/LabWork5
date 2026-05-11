@@ -4,9 +4,8 @@ import java.io.Serializable;
 
 /**
  * Класс, представляющий координаты расположения организации.
- * Реализует интерфейс Serializable для сохранения в файл.
  */
-public class Coordinates implements Serializable {
+public class Coordinates{
 
     /**
      * Координата X.

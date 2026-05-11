@@ -4,9 +4,8 @@ import java.io.Serializable;
 
 /**
  * Класс, представляющий почтовый адрес организации.
- * Реализует интерфейс Serializable для сохранения в файл.
  */
-public class Address implements Serializable {
+public class Address {
 
     /**
      * Улица и номер дома.
